@@ -95,7 +95,9 @@ class PrintController extends Controller
             Log::info("Saved JPEG: {$jpgFilename}, size: {$jpgSize} bytes");
             
             // Create PDF using TCPDF
-            $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            //$pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+            //$pdf = new TCPDF('P', 'mm', 'A6', true, 'UTF-8', false);
+            $pdf = new TCPDF('P', 'mm', [101.6, 152.4], true, 'UTF-8', false);
             
             $pdf->SetCreator('Photobooth App');
             $pdf->SetTitle('Photo Print');
@@ -106,8 +108,12 @@ class PrintController extends Controller
             $pdf->AddPage();
             
             // Calculate image dimensions to fit A4
-            $pageWidth = 200;
-            $pageHeight = 287;
+            //$pageWidth = 200;
+            //$pageHeight = 287;
+            //$pageWidth = 95;
+            //$pageHeight = 134;
+            $pageWidth = 91;
+            $pageHeight = 142;
             
             $imageRatio = $jpgWidth / $jpgHeight;
             $pageRatio = $pageWidth / $pageHeight;
@@ -141,7 +147,9 @@ class PrintController extends Controller
             
             // CUPS Print Command (SIMPLE!)
             $printCommand = sprintf(
-                '/usr/bin/lp -d %s -n %d -o media=A4 -o fit-to-page %s 2>&1',
+                '/usr/bin/lp -d %s -n %d -o media=Custom.4x6in -o fit-to-page %s 2>&1',
+                //'/usr/bin/lp -d %s -n %d -o media=A6 -o fit-to-page %s 2>&1',
+                //'/usr/bin/lp -d %s -n %d -o media=A4 -o fit-to-page %s 2>&1',
                 escapeshellarg($this->printerName),
                 (int)$copies,
                 escapeshellarg($pdfPath)
