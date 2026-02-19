@@ -10,10 +10,15 @@ use TCPDF;
 class PrintController extends Controller
 {
     // CUPS Printer Configuration
-    private $printerName = 'L1300-Series';  // Nama printer CUPS (sesuai lpstat)
+    private $printerName = 'Canon_G1030_series_USB';  // Nama printer CUPS (sesuai lpstat)
     
     public function print(Request $request)
     {
+        Log::info("=== PRINT REQUEST RECEIVED ===");
+        Log::info("Request IP: " . $request->ip());
+        Log::info("Content-Type: " . $request->header('Content-Type'));
+        Log::info("Image length: " . strlen($request->input('image', '')));    
+    
         $request->validate([
             'image' => 'required|string',
             'copies' => 'integer|min:1|max:5'
@@ -152,7 +157,7 @@ class PrintController extends Controller
             Log::info("Return code: {$printReturnCode}");
             
             // Cleanup PDF after 5 seconds
-            sleep(5);
+            sleep(30);
             @unlink($pdfPath);
             
             return response()->json([
